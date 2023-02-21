@@ -1,7 +1,23 @@
-Adafruit_NAU7802 [![Build Status](https://github.com/adafruit/Adafruit_NAU7802/workflows/Arduino%20Library%20CI/badge.svg)](https://github.com/adafruit/Adafruit_NAU7802/actions)
+NAU7802-Dual Channel (based on Adafruit NAU7802)
 ================
 
-<a href="https://www.adafruit.com/product/4538"><img src="assets/board.jpg?raw=true" width="500px"></a>
+## Installation
+
+* Download the sourcecode ("Code -> Download ZIP")
+* Extract to your Arduino library folder (/home folder on Linux; Documents on Windows)
+
+OR
+
+* Clone this library with GIT into your Arduino library folder: `git clone https://github.com/benjaminaigner/NAU7802-DualChannel/`
+
+## Differences to the Adafruit Library
+
+* Added `Adafruit_NAU7802::setChannel` to switch between channel 1 & 2
+* Added `Adafruit_NAU7802::setPGACap` to enable / disable the capacitor on channel 2 as PGA stabilizer
+* Removed the revision check
+* Added 2 channel example
+
+## Original README.md
 
 This is the Adafruit NAU7802 I2C 24-bit ADC sensor library
 
