@@ -71,6 +71,18 @@ typedef enum _calib_mode {
   NAU7802_CALMOD_GAIN = 3,
 } NAU7802_Calibration;
 
+/*! Two possible channels */
+typedef enum _channel {
+  NAU7802_CHANNEL1 = 0,
+  NAU7802_CHANNEL2 = 1,
+} NAU7802_Channel;
+
+/*! Two possible channels */
+typedef enum _cap {
+  NAU7802_CAP_OFF = 0,
+  NAU7802_CAP_ON = 1,
+} NAU7802_Cap;
+
 /**************************************************************************/
 /*!
     @brief  NAU7802 driver.
@@ -88,6 +100,8 @@ public:
   bool setLDO(NAU7802_LDOVoltage voltage);
   NAU7802_LDOVoltage getLDO(void);
   bool setGain(NAU7802_Gain gain);
+  bool setPGACap(NAU7802_Cap cap);
+  bool setChannel(NAU7802_Channel channel);
   NAU7802_Gain getGain(void);
   bool setRate(NAU7802_SampleRate gain);
   NAU7802_SampleRate getRate(void);

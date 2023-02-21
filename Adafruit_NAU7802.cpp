@@ -50,14 +50,6 @@ bool Adafruit_NAU7802::begin(TwoWire *theWire) {
     return false;
   }
 
-  /* Check for NAU7802 revision register (0x1F), low nibble should be 0xF. */
-  Adafruit_I2CRegister rev_reg =
-      Adafruit_I2CRegister(i2c_dev, NAU7802_REVISION_ID);
-
-  if ((rev_reg.read() & 0xF) != 0xF) {
-    return false;
-  }
-
   // define the main power control register
   _pu_ctrl_reg = new Adafruit_I2CRegister(i2c_dev, NAU7802_PU_CTRL);
 
@@ -86,11 +78,8 @@ bool Adafruit_NAU7802::begin(TwoWire *theWire) {
   if (!ldomode.write(0))
     return false;
 
-  // PGA stabilizer cap on output
-  Adafruit_I2CRegister pwr_reg = Adafruit_I2CRegister(i2c_dev, NAU7802_POWER);
-  Adafruit_I2CRegisterBits capen =
-      Adafruit_I2CRegisterBits(&pwr_reg, 1, 7); // # bits, bit_shift
-  if (!capen.write(1))
+  // PGA stabilizer cap on output; enabled in single channel
+  if (!setPGACap(NAU7802_CAP_ON))
     return false;
 
   return true;
@@ -259,6 +248,36 @@ bool Adafruit_NAU7802::setGain(NAU7802_Gain gain) {
       Adafruit_I2CRegisterBits(&ctrl1_reg, 3, 0); // # bits, bit_shift
 
   return gain_select.write(gain);
+}
+
+/**************************************************************************/
+/*!
+    @brief  The desired ADC input channel
+    @param  channel Desired channel: NAU7802_CHANNEL1, NAU7802_CHANNEL2
+    @returns False if there was any error during I2C comms
+*/
+/**************************************************************************/
+bool Adafruit_NAU7802::setChannel(NAU7802_Channel channel) {
+  Adafruit_I2CRegister ctrl2_reg = Adafruit_I2CRegister(i2c_dev, NAU7802_CTRL2);
+  Adafruit_I2CRegisterBits channel_select =
+      Adafruit_I2CRegisterBits(&ctrl2_reg, 1, 7); // # bits, bit_shift
+
+  return channel_select.write(channel);
+}
+
+/**************************************************************************/
+/*!
+    @brief  En-/ Disable stabilization cap for PGA on channel 2 pins
+    @note Disabling the capacitor is necessary to use channel 2
+    @param  cap PGA stabilisation cap on / off
+    @returns False if there was any error during I2C comms
+*/
+/**************************************************************************/
+bool Adafruit_NAU7802::setPGACap(NAU7802_Cap cap) {
+  Adafruit_I2CRegister pwr_reg = Adafruit_I2CRegister(i2c_dev, NAU7802_POWER);
+  Adafruit_I2CRegisterBits capen =
+      Adafruit_I2CRegisterBits(&pwr_reg, 1, 7); // # bits, bit_shift
+  return capen.write(cap);
 }
 
 /**************************************************************************/
